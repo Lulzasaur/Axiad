@@ -10,15 +10,15 @@ class API {
     let q;
 
     if (verb === 'get') {
-      q = axios.get(`${BASE_URL}/${endpoint}`, {
+      q = await axios.get(`${BASE_URL}/${endpoint}`, {
         params: { ...params }
       });
     } else if (verb === 'post') {
-      q = axios.post(`${BASE_URL}/${endpoint}`, { ...params });
+      q = await axios.post(`${BASE_URL}/${endpoint}`, { ...params });
     } 
 
     try {
-      return (await q).data;
+      return q.data;
     } catch (err) {
       console.error('API Error:', err.response);
       let message = err.response.data.message;
@@ -26,16 +26,19 @@ class API {
     }
   }
 
-  //get all urls with their associated largest images
-  static async getScrapes() {
+  static async getAllScrapes() {
     let res = await this.request(`scrapes`);
-    return res;
+    return res
   }
 
-  //add url 
+  static async getScrape(id) {
+    let res = await this.request(`scrapes/${id}`);
+    return res
+  }
+
   static async addScrape(data) {
     let res = await this.request('scrapes',data,'post');
-    return res;
+    return res
   }
 
 }

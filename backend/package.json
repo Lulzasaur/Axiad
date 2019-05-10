@@ -15,9 +15,11 @@
     "fs": "0.0.1-security",
     "http": "0.0.0",
     "image-scraper": "^0.2.1",
+    "lstat": "^1.0.0",
     "nodemon": "^1.18.11",
     "pg": "^7.10.0",
     "probe-image-size": "^4.0.0",
+    "request-promise": "^4.2.4",
     "request-promise-native": "^1.0.7"
   }
 }

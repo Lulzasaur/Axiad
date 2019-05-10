@@ -8,10 +8,12 @@ class ScrapeCard extends Component {
         }
     return (
             <div className="ScrapeCard card" style={style}>
-            <div className="card-body">
-                <p className="card-text">{this.props.url}</p>
-                <p className="card-text">{this.props.image}</p>
-            </div>
+                <div className="card-body">
+                    <p className="card-text">URL:{this.props.url}</p>
+                    <p className="card-text">IMAGE URL:{this.props.image}</p>
+                    <p className="card-text">DATE:{this.props.date}</p>
+                    <p className="card-text">SCRAPE STATUS:{this.props.status}</p>
+                </div>
             </div>
     );
     }

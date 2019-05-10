@@ -2,7 +2,7 @@
 
 const express = require("express");
 const bodyParser = require("body-parser");
-const imageRoutes = require("./routes/images");
+const imageRoutes = require("./routes/urls");
 const cors = require("cors");
 
 const app = express();
@@ -10,7 +10,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-app.use("/image", imageRoutes);
+app.use("/urls", imageRoutes);
 
 /** 404 Not Found handler. */
 

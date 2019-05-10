@@ -26,15 +26,15 @@ class API {
     }
   }
 
-  //get all questions from server returns array of question objects
-  static async getQuestions() {
-    let res = await this.request(`questions`);
+  //get all urls with their associated largest images
+  static async getUrls() {
+    let res = await this.request(`urls`);
     return res;
   }
 
-  //add user passing in type and data
-  static async addUser(data) {
-    let res = await this.request('user',data,'post');
+  //add url 
+  static async addUrls(data) {
+    let res = await this.request('urls',data,'post');
     return res;
   }
 

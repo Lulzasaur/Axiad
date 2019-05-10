@@ -3,33 +3,45 @@
 const db = require("../db");
 const express = require("express");
 const probe = require('probe-image-size');
-const Scraper = require('image-scraper');
+const cheerio = require('cheerio');
+const rp = require('request-promise-native')
+const url = require('url');
 const router = new express.Router();
 
-router.get("/", async function (req, res, next) {
+router.get("/", (req, res) => {
 
-  let   address = 'https://www.brothers-brick.com/'
-      
-  async function getBiggest(){
-    
-    let results = []
+  let address = 'https://www.brothers-brick.com/',
+      results = []
 
-    let scraper = new Scraper(address)
+  rp(address)
+    .then(function(body){
+      let $ = cheerio.load(JSON.stringify(body))
 
-    await scraper.scrape(function(image){
-        results.push(image.address)
+      $('img').each(function(i,image){
+        let modifiedImage = image.attribs.src
+        modifiedImage? modifiedImage=modifiedImage.substring(2,modifiedImage.length-2):''
+        results.push(modifiedImage)
+      })
     })
-
-    return results
-  }
-
-  let urls = getBiggest().then((res)=>{
-    return res
+    .then(function(resolve){
+    console.log(results)
   })
-
-  console.log(urls)
   
-  return ;
+      
+  // async function getBiggest(){
+  //   let scraper = new Scraper(address)
+  //   let results = []
+    
+  //   await scraper.scrape(function(image){
+  //     results.push(image.address)
+  //   })
+
+  //   console.log(results)
+
+  //   return results
+  // }
+
+  // getBiggest().then((resolve)=>console.log(resolve))
 
 });
 

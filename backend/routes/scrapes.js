@@ -14,7 +14,7 @@ router.get("/", async (req, res, next) => {
   try {
     const result = await db.query(
       `SELECT id, url, largest_image
-      FROM sites 
+      FROM scrapes 
       ORDER BY id
       `
     );
@@ -36,7 +36,7 @@ router.post("/", async function (req, res) {
       const {url} = req.body;
 
       const newUrl = await db.query(
-        `INSERT INTO sites (url) 
+        `INSERT INTO scrapes (url) 
           VALUES ($1)
           RETURNING id`,
         [url]);
@@ -52,7 +52,7 @@ router.post("/", async function (req, res) {
 
         $('img').each(function(i,image){
           let modifiedImageSrc = image.attribs.src
-          if(!modifiedImageSrc) modifiedImageSrc='https://blank.org/'
+          if(!modifiedImageSrc) modifiedImageSrc=''
           modifiedImageSrc = modifiedImageSrc.substring(2,modifiedImageSrc.length-2)
 
           probe(modifiedImageSrc)
@@ -62,7 +62,7 @@ router.post("/", async function (req, res) {
                 biggestImage = modifiedImageSrc
 
                 const updateUrl = await db.query(
-                  `UPDATE sites SET largest_image=$1
+                  `UPDATE scrapes SET largest_image=$1
                   WHERE id = $2 
                   RETURNING id, largest_image`,
                   [biggestImage,urlId]);

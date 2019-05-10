@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import API from './API'
-import QuestionCard from './QuestionCard'
+import ScrapeCard from './ScrapeCard'
 
 class App extends Component {
   constructor(props) {
@@ -9,90 +9,55 @@ class App extends Component {
 
     this.state = {
       isLoading: true,
-      name:'',
-      email:'',
-      questions: [],
-      answers:[]
+      url:'',
+      scrapes:[]
     };
 
     this.handleChange = this.handleChange.bind(this);
 
     this.handleSubmit = this.handleSubmit.bind(this);
 
-    this.handleAnswers = this.handleAnswers.bind(this);
-
   }
 
   //function for changing state from various form inputs
   handleChange(evt) {
-
     this.setState({ [evt.target.name]: evt.target.value });
-
-  }
-
-  //special function for changing state for answer fields. Answer fields use a numeric id identifier.
-  handleAnswers(evt){
-
-    let position = evt.target.name,
-        answerArr = [...this.state.answers]
-      
-    answerArr[position]=evt.target.value
-
-    this.setState({ answers: [...answerArr] });
   }
 
   async handleSubmit(evt) {
 
     evt.preventDefault();
-    let user = {
-      name: this.state.name,
-      email: this.state.email,
-      questions:[]
+    let newScrape = {
+      url: this.state.url,
     };
 
-    for(let i=1;i<this.state.answers;i++){
-        let temp ={answer:this.state.answers[i],id:[i]}
-        user.questions.push(temp)
-    }
-
-    //reset form
-    this.formRef.reset()
+    //send data to database
+    await API.addScrape(newScrape)
 
     //reset state so same information isnt submitted again
     this.setState({
-      name:'',
-      email:'',
-      answers:[]
+      url:''
     })
-
-    //send data to database
-    await API.addUser(user)
   }
 
   async componentDidMount() {
     
-    let questions = await API.getQuestions();
-    
-    questions.list = questions.map(item=>{
+    let scrapes = await API.getScrapes();
+    console.log(scrapes)
+    scrapes.list = scrapes.map(item=>{
 
       return (
         <div>
-          <QuestionCard
+          <ScrapeCard
             key={item.id}
-            question={item.question}
-          />
-          <input
-            type="text"
-            id={item.id}
-            name={item.id}
-            onChange={this.handleAnswers}
-            value={this.state.answers[item.id]}
+            url={item.url}
+            image={item.largest_image}
           />
         </div>
       );
     });
 
-    this.setState({ questions, isLoading: false });
+    this.setState({ scrapes, isLoading: false });
   }
 
   render() {
@@ -103,22 +68,15 @@ class App extends Component {
     return (
       <div className="App">
         <form onSubmit={this.handleSubmit} method='post' ref={(el) => this.formRef = el}>
-        <label htmlFor="name">Name:</label>
+        <label htmlFor="url">URL:</label>
         <input
             type="text"
-            name='name'
+            name='url'
             onChange={this.handleChange}
-            value={this.state.name}
+            value={this.state.url}
           />
         <br></br>
-        <label htmlFor="email">Email:</label>
-        <input
-          type="text"
-          name='email'
-          onChange={this.handleChange}
-          value={this.state.email}
-        />
-        {this.state.questions.list}
+        {this.state.scrapes.list}
         <button>Submit</button>
        </form>
       </div>

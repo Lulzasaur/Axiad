@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:5000/api';
+const BASE_URL = 'http://localhost:5000';
 
 class API {
   static async request(endpoint, params = {}, verb = 'get') {
@@ -27,14 +27,14 @@ class API {
   }
 
   //get all urls with their associated largest images
-  static async getUrls() {
-    let res = await this.request(`urls`);
+  static async getScrapes() {
+    let res = await this.request(`scrapes`);
     return res;
   }
 
   //add url 
-  static async addUrls(data) {
-    let res = await this.request('urls',data,'post');
+  static async addScrape(data) {
+    let res = await this.request('scrapes',data,'post');
     return res;
   }
 

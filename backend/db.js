@@ -1,8 +1,8 @@
-/** Database connection for Sinwaves. */
+/** Database connection for Axiad. */
 
 const { Client } = require("pg");
 
-const client = new Client({connectionString:'sinwaves'});
+const client = new Client({connectionString:'axiad'});
 
 client.connect();
 

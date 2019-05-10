@@ -2,8 +2,7 @@
 
 const express = require("express");
 const bodyParser = require("body-parser");
-const questionsRoutes = require("./routes/questions");
-const postUserRoutes = require("./routes/user");
+const imageRoutes = require("./routes/images");
 const cors = require("cors");
 
 const app = express();
@@ -11,8 +10,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-app.use("/api/user", postUserRoutes);
-app.use("/api/questions", questionsRoutes);
+app.use("/image", imageRoutes);
 
 /** 404 Not Found handler. */
 

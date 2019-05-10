@@ -27,25 +27,20 @@ class NewScrapeForm extends Component {
     };
 
     //send data to database
-    API.addScrape(newScrape)
-    
+    let id = await API.addScrape(newScrape)
+  
     //get all scrapes from database
-    setTimeout(async ()=>{
-        await API.getAllScrapes().then((resp)=>{
-            console.log(resp)
-            this.props.handleNewScrape(resp)
-        });   
-    },2000)
-    
+    let response = await API.getAllScrapes(),
+        scrapes = response.data
+
+    //update parent state with new scrapes
+    this.props.handleNewScrape(scrapes)
+        
     //reset state so same information isnt submitted again
     this.setState({
       url:''
     })
 
-  }
-
-  async componentDidMount() {  
-  
   }
 
   render() {

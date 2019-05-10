@@ -16,10 +16,11 @@ async function seedData() {
   try {
     await db.query(DDL);
     
-    const urls = await db.query(`
-    INSERT INTO scrapes(id, url, largest_image,date,status) VALUES
-    (1, 'www.google.com','https://www.google.com/logos/doodles/2019/lucy-wills-131st-birthday-5156345727680512.2-l.png','test', 'complete')`
-    );
+    //Initial seed data. Not necessary.
+    // const urls = await db.query(`
+    // INSERT INTO scrapes(id, url, largest_image,date,status) VALUES
+    // (1, 'www.google.com','https://www.google.com/logos/doodles/2019/lucy-wills-131st-birthday-5156345727680512.2-l.png','test', 'complete')`
+    // );
   } catch (err) {
     console.log("Something went wrong!");
     console.log(err);

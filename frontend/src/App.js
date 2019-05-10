@@ -14,17 +14,21 @@ class App extends Component {
     this.addScrape = this.addScrape.bind(this);
   }
 
+  //function to change state in parent. will be passed down as props
   addScrape(scrapes) {
     this.setState({scrapes});
   }
 
+  //load up scrape data on first load
   async componentDidMount() {
+    let response = await API.getAllScrapes(),
+        scrapes = response.data
     
-    let scrapes = await API.getAllScrapes();
     this.setState({scrapes})
   }
 
   render() {
+    //render scrapecards from state
     let scrapes = this.state.scrapes.map(item =>
       (   <div>
             <ScrapeCard

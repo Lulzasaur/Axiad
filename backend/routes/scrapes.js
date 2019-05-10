@@ -63,40 +63,43 @@ router.post("/", async function (req, res, next) {
       let urlId = newUrl.rows[0].id,
           biggestImageSize=0,
           biggestImage=''
-
-      rp(url)
-      .then(function(body){
-        let $ = cheerio.load(JSON.stringify(body))
-
-        $('img').each(function(i,image){
-          let modifiedImageSrc = image.attribs.src
-          if(!modifiedImageSrc) modifiedImageSrc=''
-          modifiedImageSrc = modifiedImageSrc.substring(2,modifiedImageSrc.length-2)
+      
+      //get body of URL and parse it
+      let body = await rp(url),
+          $ = cheerio.load(JSON.stringify(body))
+         
+          //for each <img> tag, get the src and parse it
           
-
-          rp({url:modifiedImageSrc,method:'HEAD'})
-          .then(async response=>{
-              if(response['content-length']>biggestImageSize){
-                biggestImageSize = response['content-length']
+          $('img').each(async function(i,image){
+            
+            let modifiedImageSrc = image.attribs.src
+            if(!modifiedImageSrc) modifiedImageSrc=''
+            modifiedImageSrc = modifiedImageSrc.substring(2,modifiedImageSrc.length-2)
+            
+            if(modifiedImageSrc){
+              //send a request for each src received and find the size ('content-length)
+              let imageReq = await rp({url:modifiedImageSrc,method:'HEAD'})
+            
+              if(imageReq['content-length']>biggestImageSize){
+                biggestImageSize = imageReq['content-length']
                 biggestImage = modifiedImageSrc
-
-                await db.query(
+              }
+              
+              //while query is going, find the largest size so far and add to database.
+              await db.query(
                 `UPDATE scrapes SET largest_image=$1
                 WHERE id = $2`,
                 [biggestImage,urlId]);
-              }
+            } 
           })
-          .then(async result=>{
-            await db.query(
-              `UPDATE scrapes SET status=$1
-              WHERE id = $2`,
-              ['complete',urlId])
-          })
-          .catch((error=>{
-            // console.log(error)
-          }))
-        }) 
-      })   
+          
+          //when query is completed, update database with complete status. Currently not working, must be updated.
+          await db.query(
+          `UPDATE scrapes SET status=$1
+          WHERE id = $2`,
+          ['complete',urlId])
+          
+      return res.json(urlId)
     } catch (err) {
       return next(err);
     }

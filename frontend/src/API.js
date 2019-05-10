@@ -5,39 +5,42 @@ import axios from 'axios';
 const BASE_URL = 'http://localhost:5000';
 
 class API {
-  static async request(endpoint, params = {}, verb = 'get') {
+
+  //Old ternary code used for switching between axios requests
+  // static async request(endpoint, params = {}, verb = 'get') {
     
-    let q;
+  //   let q;
 
-    if (verb === 'get') {
-      q = await axios.get(`${BASE_URL}/${endpoint}`, {
-        params: { ...params }
-      });
-    } else if (verb === 'post') {
-      q = await axios.post(`${BASE_URL}/${endpoint}`, { ...params });
-    } 
+  //   if (verb === 'get') {
+  //     q = await axios.get(`${BASE_URL}/${endpoint}`, {
+  //       params: { ...params }
+  //     });
+  //   } else if (verb === 'post') {
+  //     q = await axios.post(`${BASE_URL}/${endpoint}`, { ...params });
+  //   } 
 
-    try {
-      return q.data;
-    } catch (err) {
-      console.error('API Error:', err.response);
-      let message = err.response.data.message;
-      throw Array.isArray(message) ? message : [message];
-    }
-  }
+  //   try {
+  //     return q.data;
+  //   } catch (err) {
+  //     console.error('API Error:', err.response);
+  //     let message = err.response.data.message;
+  //     throw Array.isArray(message) ? message : [message];
+  //   }
+  // }
 
   static async getAllScrapes() {
-    let res = await this.request(`scrapes`);
+    let res = await axios.get(`${BASE_URL}/scrapes`);
     return res
   }
 
-  static async getScrape(id) {
-    let res = await this.request(`scrapes/${id}`);
-    return res
-  }
+  //to be used for later
+  // static async getScrape(id) {
+  //   let res = await this.request(`scrapes/${id}`);
+  //   return res
+  // }
 
   static async addScrape(data) {
-    let res = await this.request('scrapes',data,'post');
+    let res = await axios.post(`${BASE_URL}/scrapes`, { ...data });
     return res
   }
 
